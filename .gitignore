@@ -1,0 +1,11 @@
+# Archivos y directorios generados por Visual Studio Code
+.vscode/
+.settings.json
+.code-workspace
+
+# Historial de sesiones de Visual Studio Code
+.history/
+
+# Carpetas específicas de configuración de VS Code (pueden variar según tus extensiones)
+.vscode/
+.settings/
