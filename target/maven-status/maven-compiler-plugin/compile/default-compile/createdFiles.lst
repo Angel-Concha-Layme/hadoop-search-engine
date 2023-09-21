@@ -1,0 +1,3 @@
+com\angel\hadoopsearch\mapper\TokenizerMapper.class
+com\angel\hadoopsearch\HadoopSearchDriver.class
+com\angel\hadoopsearch\reducer\IntSumReducer.class
