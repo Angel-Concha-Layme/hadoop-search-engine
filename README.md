@@ -1,7 +1,6 @@
 
 # Motor de búsqueda Hadoop
 
-
 ## Configuración del Cluster Hadoop 
 
 ### Prerrequisitos
@@ -155,6 +154,28 @@ Validación de servicios activos:
 - ResourceManager: [http://localhost:8088/](http://localhost:8088/)
 
 Si NameNode es inaccesible, es probable que el directorio por defecto no exista. Verificar y, si es necesario, crear y ajustar permisos según se indica en los siguientes pasos.
+
+1. Verificar si el directorio `/tpm/hadoop-<nombre_de_usuario>/dfs/name` existe:
+```bash
+ls /tmp/hadoop-<nombre_de_usuario>/dfs/name
+```
+2. Si no existe, crearlo:
+```bash
+mkdir -p /tmp/hadoop-<nombre_de_usuario>/dfs/name
+```
+
+3. Configurar permisos    
+```bash
+sudo chown -R <nombre_de_usuario>:<nombre_de_usuario> /tmp/hadoop-<nombre_de_usuario>
+sudo chmod -R 755 /tmp/hadoop-<nombre_de_usuario>
+```
+
+4. Reiniciar HDFS
+```bash
+stop-dfs.sh
+start-dfs.sh
+```
+
 
 #### vi. Directorio Principal en HDFS:
 
