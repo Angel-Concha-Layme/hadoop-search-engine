@@ -13,6 +13,9 @@ public class HadoopSearchDriver {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+        conf.setBoolean("mapreduce.input.fileinputformat.input.dir.recursive", true); // Habilita el procesamiento
+                                                                                      // recursivo de directorios
+
         Job job = Job.getInstance(conf, "hadoop search");
         job.setJarByClass(HadoopSearchDriver.class);
         job.setMapperClass(TokenizerMapper.class);
