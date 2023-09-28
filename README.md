@@ -196,3 +196,10 @@ Para más detalles sobre la configuración de Hadoop, consulta [este documento](
 
 
 
+## Conjunto de datos
+
+
+## PageRank 
+
+
+## 
