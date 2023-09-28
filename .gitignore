@@ -9,3 +9,5 @@
 # Carpetas específicas de configuración de VS Code (pueden variar según tus extensiones)
 .vscode/
 .settings/
+
+.JAR
