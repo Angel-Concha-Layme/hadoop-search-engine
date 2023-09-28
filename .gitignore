@@ -10,4 +10,5 @@
 .vscode/
 .settings/
 
-.JAR
+.jar
+.class
