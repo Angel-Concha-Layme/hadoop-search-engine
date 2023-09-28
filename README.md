@@ -1,7 +1,6 @@
 
-He revisado y estilizado tu README, haciéndolo más formal y académico:
+# Motor de búsqueda Hadoop
 
----
 
 ## Configuración del Cluster Hadoop 
 
