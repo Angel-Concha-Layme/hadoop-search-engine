@@ -14,12 +14,12 @@ public class TokenizerMapper extends Mapper<Object, Text, Text, Text> {
 
     @Override
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-        String[] tokens = value.toString().split("\\s+");
+        String[] tokens = value.toString().split("\\\\s+");
         FileSplit fileSplit = (FileSplit) context.getInputSplit();
         String fullPath = fileSplit.getPath().toString();
-        String parentDir = new Path(fullPath).getParent().getName(); // Obtiene el nombre del subdirectorio
-        String name = new Path(fullPath).getName(); // Obtiene el nombre del archivo
-        String combinedPath = parentDir + "/" + name; // Combina el nombre del subdirectorios y el nombre del archivo
+        String parentDir = new Path(fullPath).getParent().getName();
+        String name = new Path(fullPath).getName();
+        String combinedPath = parentDir + "/" + name;
         filePath.set(combinedPath);
 
         for (String token : tokens) {
