@@ -19,7 +19,9 @@ public class IDMappingDriver {
         job.setMapperClass(IDMapper.class);
         job.setReducerClass(IDReducer.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(IntWritable.class); // La salida final sigue siendo IntWritable
+        job.setMapOutputKeyClass(Text.class); // Esto es necesario para definir la salida del Mapper
+        job.setMapOutputValueClass(Text.class); // Esto es necesario para definir la salida del Mapper
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
