@@ -1,8 +1,9 @@
 package com.angel.hadoopsearch;
 
 import com.angel.hadoopsearch.mapper.TokenizerMapper;
-import com.angel.hadoopsearch.reducer.IntSumReducer;
-import com.angel.hadoopsearch.reducer.InvertedIndexCombiner;
+import com.angel.hadoopsearch.reducer.FileListReducer;
+
+import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,15 +16,20 @@ public class HadoopSearchDriver {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+        // Agrega la ruta del archivo cacheado en tu configuración
+
         conf.setBoolean("mapreduce.input.fileinputformat.input.dir.recursive", true);
         conf.set("mapreduce.map.output.compress", "true");
         conf.set("mapreduce.map.output.compress.codec", "org.apache.hadoop.io.compress.SnappyCodec");
 
         Job job = Job.getInstance(conf, "hadoop search optimized");
+        // Agrega la ruta del archivo cacheado en tu configuración
+        job.addCacheFile(new URI("/user/angel/DirIdMapping/part-r-00000"));
+
         job.setJarByClass(HadoopSearchDriver.class);
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(InvertedIndexCombiner.class);
-        job.setReducerClass(IntSumReducer.class);
+        job.setCombinerClass(FileListReducer.class);
+        job.setReducerClass(FileListReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
