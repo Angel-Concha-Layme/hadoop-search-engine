@@ -1,4 +1,6 @@
+com\angel\hadoopsearch\mapper\IDMapper.class
+com\angel\hadoopsearch\reducer\FileListReducer.class
 com\angel\hadoopsearch\HadoopSearchDriver.class
+com\angel\hadoopsearch\IDMappingDriver.class
 com\angel\hadoopsearch\mapper\TokenizerMapper.class
-com\angel\hadoopsearch\reducer\IntSumReducer.class
-com\angel\hadoopsearch\reducer\InvertedIndexCombiner.class
+com\angel\hadoopsearch\reducer\IDReducer.class
