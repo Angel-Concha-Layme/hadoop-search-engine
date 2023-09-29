@@ -1,4 +1,6 @@
 D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\HadoopSearchDriver.java
+D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\reducer\FileListReducer.java
+D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\mapper\IDMapper.java
 D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\mapper\TokenizerMapper.java
-D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\reducer\InvertedIndexCombiner.java
-D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\reducer\IntSumReducer.java
+D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\IDMappingDriver.java
+D:\PROYECTOS\hadoop-search-engine\src\main\java\com\angel\hadoopsearch\reducer\IDReducer.java
