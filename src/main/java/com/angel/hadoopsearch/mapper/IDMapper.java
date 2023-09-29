@@ -2,24 +2,28 @@ package com.angel.hadoopsearch.mapper;
 
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
 
-public class IDMapper extends Mapper<Object, Text, Text, IntWritable> {
+public class IDMapper extends Mapper<Object, Text, Text, Text> {
 
-    private Text filenameKey = new Text();
-    private static final IntWritable one = new IntWritable(1);
+    private Text fileNameKey = new Text();
+    private Text dummyValue = new Text("1");
 
     @Override
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         FileSplit fileSplit = (FileSplit) context.getInputSplit();
-        String fullPath = fileSplit.getPath().toString();
-        String name = new Path(fullPath).getName();
-        filenameKey.set(name);
+        String fileName = fileSplit.getPath().getName();
 
-        context.write(filenameKey, one); // Emitir un IntWritable en lugar de Text
+        if (esArchivoDeTexto(fileName)) {
+            fileNameKey.set(fileName);
+            context.write(fileNameKey, dummyValue);
+        }
+    }
+
+    private boolean esArchivoDeTexto(String fileName) {
+        // Misma heurística o patrón usado anteriormente
+        return fileName.endsWith(".txt");
     }
 }
