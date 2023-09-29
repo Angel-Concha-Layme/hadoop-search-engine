@@ -1,76 +1,73 @@
 package com.angel.hadoopsearch.mapper;
 
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import java.net.URI;
+import org.apache.hadoop.fs.FileSystem;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-public class TokenizerMapper extends Mapper<Object, Text, Text, Text> {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import java.util.regex.Matcher;
+
+public class TokenizerMapper extends Mapper<LongWritable, Text, Text, Text> {
 
     private Text word = new Text();
     private Text fileID = new Text();
-    private Map<String, String> fileToID = new HashMap<>();
-
     private final Pattern WORD_PATTERN = Pattern
             .compile("(https?://[^\\s]+)|([\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6})|(\\b[\\w']+\\b)");
+    private Map<String, String> fileToID = new HashMap<>();
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        URI[] cacheFiles = context.getCacheFiles();
-        if (cacheFiles != null && cacheFiles.length > 0) {
-            try {
-                // Accede al archivo cacheado
-                Path cachePath = new Path(cacheFiles[0].getPath());
-                String cacheFileName = cachePath.getName();
-
-                // Verifica la ubicación del archivo cachead
-
-                // Configura un lector para el archivo cacheado
-                BufferedReader reader = new BufferedReader(new FileReader(cacheFileName));
-
+        Path[] inputPaths = FileInputFormat.getInputPaths(context);
+        for (Path inputPath : inputPaths) {
+            if (inputPath.toString().contains("/user/angel/IDs")) { // Un indicador que se refiere al archivo de mapeo
+                                                                    // de
+                // IDs
+                FileSystem fs = FileSystem.get(context.getConfiguration());
+                BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(inputPath)));
                 String line;
-
-                // Lee y procesa cada línea del archivo cacheado
-                while ((line = reader.readLine()) != null) {
-                    String[] tokens = line.split("\\t");
-                    if (tokens.length == 2) {
-                        // Almacena el mapeo de nombres de archivo a IDs
-                        fileToID.put(tokens[0], tokens[1]);
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split("\t");
+                    if (parts.length == 2) {
+                        fileToID.put(parts[0], parts[1]);
                     }
                 }
-                reader.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                br.close();
             }
         }
     }
 
     @Override
-    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-        Matcher matcher = WORD_PATTERN.matcher(value.toString());
+    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         FileSplit fileSplit = (FileSplit) context.getInputSplit();
-        String fullPath = fileSplit.getPath().toString();
-        String name = new Path(fullPath).getName();
-        String id = fileToID.get(name);
+        String fileName = fileSplit.getPath().getName();
 
-        if (id == null) {
-            System.err.println("File ID not found for: " + name);
-            throw new IOException("File ID not found for: " + name);
+        if (esArchivoDeTexto(fileName)) {
+            String id = fileToID.get(fileName);
+            if (id == null) {
+                System.err.println("File ID not found for: " + fileName);
+                throw new IOException("File ID not found for: " + fileName);
+            }
+
+            fileID.set(id);
+
+            Matcher matcher = WORD_PATTERN.matcher(value.toString());
+            while (matcher.find()) {
+                word.set(matcher.group());
+                context.write(word, fileID);
+            }
         }
+    }
 
-        fileID.set(id);
-
-        while (matcher.find()) {
-            word.set(matcher.group());
-            context.write(word, fileID);
-        }
+    private boolean esArchivoDeTexto(String fileName) {
+        return fileName.endsWith(".txt");
     }
 }
