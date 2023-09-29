@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class IDReducer extends Reducer<Text, Text, Text, IntWritable> {
 
-    private static int fileCounter = 0;
+    private int fileCounter = 0;
 
     @Override
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
